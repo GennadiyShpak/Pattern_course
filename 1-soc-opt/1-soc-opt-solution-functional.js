@@ -22,12 +22,12 @@ const SCHEMA = {
     5: { align: 'right', length: 6 }
 };
 
-const convertToArray = (data) => data
+const extractDataRows = (data) => data
     .split('\n')
     .slice(1)
     .map(item => item.trim().split(','));
 
-const updateDataByPercentage = (data, columnNumber) => {
+const addPercentageColumn = (data, columnNumber) => {
     const maxArea = data.reduce((acc, item) => {
         const area = parseInt(item[columnNumber]);
 
@@ -57,7 +57,7 @@ const rowFormatter = (data, schema) => {
         const elementSettings = schema[i];
         const element = alignCell(item, elementSettings);
 
-        return acc + ' ' + element;
+        return acc + element;
     }, '')
 };
 
@@ -67,12 +67,15 @@ const formatDataVisualisation = (data) => {
     });
 }
 
-const convertToString = data => data.join('\n');
+const displayCityStatistics = data => {
+    data.forEach((row) => {
+        console.log(row);
+    });
+};
 
-const dataArray = convertToArray(data);
-const updatedStatistics = updateDataByPercentage(dataArray, AREA_INDEX);
+const dataArray = extractDataRows(data);
+const updatedStatistics = addPercentageColumn(dataArray, AREA_INDEX);
 const sortedData = sortTable(updatedStatistics, DENSITY_INDEX);
 const formatedData = formatDataVisualisation(sortedData);
-const cityList = convertToString(formatedData);
 
-console.log(cityList);
+displayCityStatistics(formatedData);
